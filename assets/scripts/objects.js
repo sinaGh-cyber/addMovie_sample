@@ -3,21 +3,31 @@ const searchBtn = document.getElementById(`search-btn`);
 
 const movies = [];
 
-const renderMovies = () => {
-    const movieList = document.getElementById(`movie-list`);
-    if (movies.length === 0){
-        movieList.classList.remove(`visible`)
-    } else {
-        movieList.classList.add(`visible`)
-    };
+const renderMovies = (filter = ``) => {
+  const movieList = document.getElementById(`movie-list`);
+  if (movies.length === 0) {
+    movieList.classList.remove(`visible`);
+  } else {
+    movieList.classList.add(`visible`);
+  }
 
-    movieList.innerHTML = ``;
+  movieList.innerHTML = ``;
 
-    movies.forEach( movie => {
-        const movieEl = document.createElement(`li`);
-        movieEl.textContent = movie.info.title;
-        movieList.append(movieEl);
-    });
+  const filteredMovies = !filter
+    ? movies
+    : movies.filter((movie) => movie.info.title.includes(filter));
+
+  filteredMovies.forEach((movie) => {
+    const movieEl = document.createElement(`li`);
+    text = movie.info.title + " - ";
+    for (const key in movie.info) {
+      if (key !== `title`) {
+        text = text + `${key}: ${movie.info[key]}`;
+      }
+    }
+    movieEl.textContent = text;
+    movieList.append(movieEl);
+  });
 };
 
 const addMovieHandler = () => {
@@ -44,4 +54,10 @@ const addMovieHandler = () => {
   renderMovies();
 };
 
+const searchMovieHandler = () => {
+  const filterTerm = document.getElementById(`filter-title`).value;
+  renderMovies(filterTerm);
+};
+
 addMovieBtn.addEventListener(`click`, addMovieHandler);
+searchBtn.addEventListener(`click`, searchMovieHandler);
